@@ -18,7 +18,7 @@ def createDatabase() :
     dbClient = pymongo.MongoClient(koneksi_url)
     namaDatabase = dbClient['Nugasehh']
     namaCollection = namaDatabase['Contoh1']
-    value_data = namaCollection.insert_one({ 'nama':"Aslanbey", 'jk': "Cowok", 'umur': "18" })
+    value_data = namaCollection.insert_one({ 'nama': "Aslanbey", 'jk': "Laki-Laki", 'umur' : "18" })
     print("berhasil menambahkan data")
     print(value_data)
 
@@ -38,72 +38,13 @@ class MongoCRUD:
             item: data[item] for item in data if item != '_id'} for data in documents]
         return value
 
-    def createData(self, data):
-        new_document = data['document']
-        response = self.collection.insert_one(new_document)
-        value = {
-            'status' : 'berhasil',
-            'document_id' : str(response.inserted_id)
-        }
-        return value
-
-
-    #========================================================#
-    #============== fungsi untuk update data ================#
-
-    def updateData(self):
-        data_awal = self.data['dataAwal']
-        update_data = {
-            "$set" : self.data['dataUpdate']
-        }
-
-        response = self.collection.update_one(data_awal, update_data)
-        value = {
-            "status" : "berhasil diupdate" if response.modified_count > 0 else "data tidak ditemukan"
-        }
-
-        print(value)
-
-    #========================================================#
-
-    def deleteData(self, data):
-        dataHapus = data['document']
-        response = self.collection.delete_one(dataHapus)
-        value = {
-            'status' : 'berhasil dihapus' if response.deleted_count > 0 else "data tidak ditemukan"
-        }
-
-        print(value)
-
-
-
-
 
 if __name__ == '__main__' :
     data = {
         "database" : "Nugasehh",
-        "collection" : "Contoh1",
-
-        "dataAwal" : {
-            "nama" : "Aslanbey",
-            "jk" : "Cowok",
-            "umur": "18"
-        },
-
-        "dataUpdate" : {
-            "nama" : "Elenora",
-            "jk" : "Cewek",
-            "umur": "24"
-        }
-    }
-
-    data_delete = {
-        "document" : {
-            "nama" : "Elenora",
-            "jk" : "Cewek",
-            "umur": "24"
-        }
+        "collection" : "Contoh1"
     }
 
     mongo_objek = MongoCRUD(data, koneksi_url)
-    delete = mongo_objek.deleteData(data_delete)
+    read = mongo_objek.readData()
+    print(read)
